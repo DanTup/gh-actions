@@ -12,12 +12,10 @@ async function run() {
 		const dartChannel = core.getInput("channel", { required: true });
 		const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/release/latest/sdk/dartsdk-${dartOS}-x64-release.zip`;
 
-		core.debug(`Downloading ${url}...`);
 		const dartZipPath = await tc.downloadTool(url);
 
 		// TODO: Cache?
 		// https://github.com/actions/toolkit/tree/master/packages/tool-cache
-		core.debug(`Extracting ${dartZipPath}...`);
 		const dartSdkPath = await tc.extractZip(dartZipPath);
 
 		core.addPath(path.join(dartSdkPath, "dart-sdk", "bin"));

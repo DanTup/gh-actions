@@ -10,6 +10,7 @@
 				"RUNNER_TEMP": "/tmp/github-actions",
 				"INPUT_CHANNEL": "stable"
 			},
+			"console": "integratedTerminal",
 			"preLaunchTask": "npm: watch",
 			"outFiles": [
 				"${workspaceRoot}/out/**/*.js"

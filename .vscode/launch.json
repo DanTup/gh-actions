@@ -15,6 +15,21 @@
 			"outFiles": [
 				"${workspaceRoot}/out/**/*.js"
 			]
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Run Setup Flutter",
+			"program": "${workspaceFolder}/src/setup-flutter/main.ts",
+			"env": {
+				"RUNNER_TEMP": "/tmp/github-actions",
+				"INPUT_CHANNEL": "stable"
+			},
+			"console": "integratedTerminal",
+			"preLaunchTask": "npm: watch",
+			"outFiles": [
+				"${workspaceRoot}/out/**/*.js"
+			]
 		}
 	]
 }

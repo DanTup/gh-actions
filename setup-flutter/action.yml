@@ -1,0 +1,13 @@
+name: "Setup Flutter environment"
+description: "Setup a Flutter environment and add it to the PATH"
+author: DanTup
+inputs:
+  channel:
+    description: "The Flutter channel to use.  Examples: stable, dev."
+    default: "stable"
+outputs:
+  flutter-sdk:
+    description: "Path to the Flutter SDK folder."
+runs:
+  using: 'node12'
+  main: '../out/src/setup-flutter/main.js'

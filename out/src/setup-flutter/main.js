@@ -13,6 +13,7 @@ const exec = require("@actions/exec");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const isWin = /^win/.test(process.platform);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -25,7 +26,7 @@ function run() {
             core.addPath(path.join(flutterSdkPath, "bin"));
             core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
             core.setOutput("flutter-sdk", flutterSdkPath);
-            yield exec.exec("./flutter", ["doctor"], { cwd: path.join(flutterSdkPath, "bin") });
+            yield exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor"]);
         }
         catch (error) {
             core.setFailed(error.message);

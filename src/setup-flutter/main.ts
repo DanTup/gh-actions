@@ -4,6 +4,8 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
+const isWin = /^win/.test(process.platform);
+
 async function run() {
 	try {
 		const flutterChannel = core.getInput("channel", { required: true });
@@ -19,7 +21,7 @@ async function run() {
 		core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
 		core.setOutput("flutter-sdk", flutterSdkPath);
 
-		await exec.exec("./flutter", ["doctor"], { cwd: path.join(flutterSdkPath, "bin") });
+		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor"]);
 	} catch (error) {
 		core.setFailed(error.message);
 	}

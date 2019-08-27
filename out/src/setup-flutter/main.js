@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = require("@actions/core");
 const exec = require("@actions/exec");
+const fs = require("fs");
 const os = require("os");
 const path = require("path");
 function run() {
@@ -17,13 +18,14 @@ function run() {
         try {
             const flutterChannel = core.getInput("channel", { required: true });
             const flutterRepo = `https://github.com/flutter/flutter`;
-            const tempFolder = os.tmpdir();
+            const tempFolder = path.join(os.tmpdir(), Math.round(Math.random() * 10000).toString());
+            fs.mkdirSync(tempFolder);
             yield exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: tempFolder });
             const flutterSdkPath = path.join(tempFolder, "flutter");
             core.addPath(path.join(flutterSdkPath, "bin"));
             core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
             core.setOutput("flutter-sdk", flutterSdkPath);
-            yield exec.exec("flutter", ["doctor"], { cwd: tempFolder });
+            yield exec.exec("./flutter", ["doctor"], { cwd: path.join(flutterSdkPath, "bin") });
         }
         catch (error) {
             core.setFailed(error.message);

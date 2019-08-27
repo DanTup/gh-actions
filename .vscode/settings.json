@@ -1,0 +1,13 @@
+{
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"editor.tabSize": 4,
+	"files.exclude": {
+		"out": true,
+		"**/node_modules": true,
+	},
+	"files.insertFinalNewline": true,
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": true
+	},
+}

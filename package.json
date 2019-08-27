@@ -1,0 +1,22 @@
+{
+	"name": "gh-actions",
+	"description": "A collection of GitHub actions I needed.",
+	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DanTup/gh-actions.git"
+	},
+	"scripts": {
+		"build": "tsc -p ./",
+		"watch": "tsc -p ./ --watch"
+	},
+	"dependencies": {
+		"@actions/core": "1.0.0",
+		"@actions/tool-cache": "1.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^12.7.2",
+		"tslint": "^5.19.0",
+		"typescript": "^3.5.3"
+	}
+}

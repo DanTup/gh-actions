@@ -1,0 +1,13 @@
+name: "Setup Dart environment"
+description: "Setup a Dart environment and add it to the PATH"
+author: DanTup
+inputs:
+  channel:
+    description: "The Dart channel to use.  Examples: stable, dev."
+    default: "stable"
+outputs:
+  dart-sdk:
+    description: "Path to the Dart SDK folder."
+runs:
+  using: 'node12'
+  main: '../out/setup-dart/main.js'

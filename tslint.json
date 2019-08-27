@@ -1,0 +1,16 @@
+{
+	"extends": [
+		"tslint:recommended"
+	],
+	"rules": {
+		"indent": {
+			"options": "tabs"
+		},
+		"curly": false,
+		"no-console": false,
+		"max-classes-per-file": false,
+		"interface-name": false,
+		"member-ordering": false,
+		"space-before-function-paren": false
+	}
+}

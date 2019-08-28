@@ -26,7 +26,8 @@ function run() {
             core.addPath(path.join(flutterSdkPath, "bin"));
             core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
             core.setOutput("flutter-sdk", flutterSdkPath);
-            yield exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor"]);
+            yield exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["config", "--no-analytics"]);
+            yield exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor", "-v"]);
         }
         catch (error) {
             core.setFailed(error.message);

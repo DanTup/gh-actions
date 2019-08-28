@@ -21,7 +21,8 @@ async function run() {
 		core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
 		core.setOutput("flutter-sdk", flutterSdkPath);
 
-		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor"]);
+		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["config", "--no-analytics"]);
+		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor", "-v"]);
 	} catch (error) {
 		core.setFailed(error.message);
 	}

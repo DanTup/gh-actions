@@ -19,8 +19,11 @@ function run() {
         try {
             const flutterChannel = core.getInput("channel", { required: true });
             const flutterRepo = `https://github.com/flutter/flutter`;
-            const tempFolder = path.join(os.tmpdir(), Math.round(Math.random() * 10000).toString());
+            let tempFolder = path.join(os.tmpdir(), Math.round(Math.random() * 10000).toString());
             fs.mkdirSync(tempFolder);
+            // Resolve symlinks because the Dart analysis server will resolve them
+            // and sometimes give errors about types not matching across them.
+            tempFolder = fs.realpathSync.native(tempFolder);
             yield exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: tempFolder });
             const flutterSdkPath = path.join(tempFolder, "flutter");
             core.addPath(path.join(flutterSdkPath, "bin"));

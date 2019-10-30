@@ -5,7 +5,7 @@ import * as path from "path";
 const isWin = /^win/.test(process.platform);
 const isMac = process.platform === "darwin";
 
-const dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
+export const dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 
 async function run() {
 	try {

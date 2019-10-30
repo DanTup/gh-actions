@@ -1,11 +1,16 @@
 import * as core from "@actions/core";
 import * as exec from "@actions/exec";
+import * as tc from "@actions/tool-cache";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import { fetch } from "../utils";
 
-const isWin = /^win/.test(process.platform);
 const flutterRepo = `https://github.com/flutter/flutter`;
+const isWin = /^win/.test(process.platform);
+const isMac = process.platform === "darwin";
+
+export const dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 
 async function run() {
 	try {
@@ -18,12 +23,9 @@ async function run() {
 		// and sometimes give errors about types not matching across them.
 		tempFolder = fs.realpathSync.native(tempFolder);
 
-		if (useZip)
-			await downloadZip(flutterChannel, tempFolder);
-		else
-			await gitClone(flutterChannel, tempFolder);
-
-		const flutterSdkPath = path.join(tempFolder, "flutter");
+		const flutterSdkPath = useZip
+			? await downloadZip(flutterChannel, tempFolder)
+			: await gitClone(flutterChannel, tempFolder);
 
 		core.addPath(path.join(flutterSdkPath, "bin"));
 		core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
@@ -38,10 +40,38 @@ async function run() {
 
 async function gitClone(flutterChannel: string, folder: string) {
 	await exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: folder });
+
+	return path.join(folder, "flutter");
 }
 
 async function downloadZip(flutterChannel: string, folder: string) {
-	throw new Error("NYI");
+	const url = `https://storage.googleapis.com/flutter_infra/releases/releases_${dartOS}.json`;
+	let releases: FlutterReleaseJson;
+	try {
+		releases = JSON.parse(await fetch(url));
+	} catch (e) {
+		throw new Error(`Failed to download Flutter releases from ${url}: ${e}`);
+	}
+	const hash = releases.current_release[flutterChannel];
+	if (!hash)
+		throw new Error(`Unable to find a release for channel ${flutterChannel}`);
+	const release = releases.releases.find((r) => r.hash === hash);
+	if (!release)
+		throw new Error(`Unable to find release for hash ${hash}`);
+
+	const zipPath = await tc.downloadTool(`${releases.base_url}/${release.archive}`);
+	await tc.extractZip(zipPath, folder);
+
+	return path.join(folder, "flutter");
+}
+
+interface FlutterReleaseJson {
+	base_url: string;
+	current_release: { [key: string]: string };
+	releases: Array<{
+		hash: string;
+		archive: string;
+	}>;
 }
 
 run();

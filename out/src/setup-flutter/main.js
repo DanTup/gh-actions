@@ -10,11 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = require("@actions/core");
 const exec = require("@actions/exec");
+const tc = require("@actions/tool-cache");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const isWin = /^win/.test(process.platform);
+const utils_1 = require("../utils");
 const flutterRepo = `https://github.com/flutter/flutter`;
+const isWin = /^win/.test(process.platform);
+const isMac = process.platform === "darwin";
+exports.dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -25,11 +29,9 @@ function run() {
             // Resolve symlinks because the Dart analysis server will resolve them
             // and sometimes give errors about types not matching across them.
             tempFolder = fs.realpathSync.native(tempFolder);
-            if (useZip)
-                yield downloadZip(flutterChannel, tempFolder);
-            else
-                yield gitClone(flutterChannel, tempFolder);
-            const flutterSdkPath = path.join(tempFolder, "flutter");
+            const flutterSdkPath = useZip
+                ? yield downloadZip(flutterChannel, tempFolder)
+                : yield gitClone(flutterChannel, tempFolder);
             core.addPath(path.join(flutterSdkPath, "bin"));
             core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
             core.setOutput("flutter-sdk", flutterSdkPath);
@@ -44,11 +46,28 @@ function run() {
 function gitClone(flutterChannel, folder) {
     return __awaiter(this, void 0, void 0, function* () {
         yield exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: folder });
+        return path.join(folder, "flutter");
     });
 }
 function downloadZip(flutterChannel, folder) {
     return __awaiter(this, void 0, void 0, function* () {
-        throw new Error("NYI");
+        const url = `https://storage.googleapis.com/flutter_infra/releases/releases_${exports.dartOS}.json`;
+        let releases;
+        try {
+            releases = JSON.parse(yield utils_1.fetch(url));
+        }
+        catch (e) {
+            throw new Error(`Failed to download Flutter releases from ${url}: ${e}`);
+        }
+        const hash = releases.current_release[flutterChannel];
+        if (!hash)
+            throw new Error(`Unable to find a release for channel ${flutterChannel}`);
+        const release = releases.releases.find((r) => r.hash === hash);
+        if (!release)
+            throw new Error(`Unable to find release for hash ${hash}`);
+        const zipPath = yield tc.downloadTool(`${releases.base_url}/${release.archive}`);
+        yield tc.extractZip(zipPath, folder);
+        return path.join(folder, "flutter");
     });
 }
 run();

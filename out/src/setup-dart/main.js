@@ -13,12 +13,12 @@ const tc = require("@actions/tool-cache");
 const path = require("path");
 const isWin = /^win/.test(process.platform);
 const isMac = process.platform === "darwin";
-const dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
+exports.dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const dartChannel = core.getInput("channel", { required: true });
-            const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/release/latest/sdk/dartsdk-${dartOS}-x64-release.zip`;
+            const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/release/latest/sdk/dartsdk-${exports.dartOS}-x64-release.zip`;
             const dartZipPath = yield tc.downloadTool(url);
             // TODO: Cache?
             // https://github.com/actions/toolkit/tree/master/packages/tool-cache

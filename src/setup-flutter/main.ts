@@ -9,6 +9,7 @@ import { fetch } from "../utils";
 const flutterRepo = `https://github.com/flutter/flutter`;
 const isWin = /^win/.test(process.platform);
 const isMac = process.platform === "darwin";
+const isLinux = !(isWin || isMac);
 
 export const dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 
@@ -60,7 +61,7 @@ async function downloadZip(flutterChannel: string, folder: string) {
 		throw new Error(`Unable to find release for hash ${hash}`);
 
 	const zipPath = await tc.downloadTool(`${releases.base_url}/${release.archive}`);
-	await tc.extractZip(zipPath, folder);
+	await (isLinux ? tc.extractTar(zipPath, folder) : tc.extractZip(zipPath, folder));
 
 	return path.join(folder, "flutter");
 }

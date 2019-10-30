@@ -18,6 +18,7 @@ const utils_1 = require("../utils");
 const flutterRepo = `https://github.com/flutter/flutter`;
 const isWin = /^win/.test(process.platform);
 const isMac = process.platform === "darwin";
+const isLinux = !(isWin || isMac);
 exports.dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -66,7 +67,7 @@ function downloadZip(flutterChannel, folder) {
         if (!release)
             throw new Error(`Unable to find release for hash ${hash}`);
         const zipPath = yield tc.downloadTool(`${releases.base_url}/${release.archive}`);
-        yield tc.extractZip(zipPath, folder);
+        yield (isLinux ? tc.extractTar(zipPath, folder) : tc.extractZip(zipPath, folder));
         return path.join(folder, "flutter");
     });
 }

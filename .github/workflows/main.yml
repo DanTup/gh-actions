@@ -1,0 +1,36 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    name: "${{ matrix.os }})"
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        sdk-version: [stable, dev]
+        
+    steps:
+
+      - uses: actions/checkout@v1
+
+      - name: Setup Dart ${{ matrix.dart-version }}
+        uses: DanTup/gh-actions/setup-dart@master
+        with:
+          channel: ${{ matrix.sdk-version }}
+
+      - name: Setup Flutter ${{ matrix.sdk-version }}
+        uses: DanTup/gh-actions/setup-flutter@master
+        with:
+          channel: ${{ matrix.sdk-version }}
+
+      - name: Print Dart version
+        run: dart --version
+
+      - name: Print Flutter version
+        run: flutter --version
+

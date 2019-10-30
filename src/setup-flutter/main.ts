@@ -5,18 +5,23 @@ import * as os from "os";
 import * as path from "path";
 
 const isWin = /^win/.test(process.platform);
+const flutterRepo = `https://github.com/flutter/flutter`;
 
 async function run() {
 	try {
 		const flutterChannel = core.getInput("channel", { required: true });
-		const flutterRepo = `https://github.com/flutter/flutter`;
+		const useZip = core.getInput("zip") && core.getInput("zip").trim().toLowerCase() === "true";
 
 		let tempFolder = path.join(os.tmpdir(), Math.round(Math.random() * 10000).toString());
 		fs.mkdirSync(tempFolder);
 		// Resolve symlinks because the Dart analysis server will resolve them
 		// and sometimes give errors about types not matching across them.
 		tempFolder = fs.realpathSync.native(tempFolder);
-		await exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: tempFolder });
+
+		if (useZip)
+			await downloadZip(flutterChannel, tempFolder);
+		else
+			await gitClone(flutterChannel, tempFolder);
 
 		const flutterSdkPath = path.join(tempFolder, "flutter");
 
@@ -29,6 +34,14 @@ async function run() {
 	} catch (error) {
 		core.setFailed(error.message);
 	}
+}
+
+async function gitClone(flutterChannel: string, folder: string) {
+	await exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: folder });
+}
+
+async function downloadZip(flutterChannel: string, folder: string) {
+	throw new Error("NYI");
 }
 
 run();

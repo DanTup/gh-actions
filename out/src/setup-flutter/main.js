@@ -14,17 +14,21 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const isWin = /^win/.test(process.platform);
+const flutterRepo = `https://github.com/flutter/flutter`;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const flutterChannel = core.getInput("channel", { required: true });
-            const flutterRepo = `https://github.com/flutter/flutter`;
+            const useZip = core.getInput("zip") && core.getInput("zip").trim().toLowerCase() === "true";
             let tempFolder = path.join(os.tmpdir(), Math.round(Math.random() * 10000).toString());
             fs.mkdirSync(tempFolder);
             // Resolve symlinks because the Dart analysis server will resolve them
             // and sometimes give errors about types not matching across them.
             tempFolder = fs.realpathSync.native(tempFolder);
-            yield exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: tempFolder });
+            if (useZip)
+                yield downloadZip(flutterChannel, tempFolder);
+            else
+                yield gitClone(flutterChannel, tempFolder);
             const flutterSdkPath = path.join(tempFolder, "flutter");
             core.addPath(path.join(flutterSdkPath, "bin"));
             core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
@@ -35,6 +39,16 @@ function run() {
         catch (error) {
             core.setFailed(error.message);
         }
+    });
+}
+function gitClone(flutterChannel, folder) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: folder });
+    });
+}
+function downloadZip(flutterChannel, folder) {
+    return __awaiter(this, void 0, void 0, function* () {
+        throw new Error("NYI");
     });
 }
 run();

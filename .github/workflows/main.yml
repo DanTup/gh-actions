@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    name: "${{ matrix.sdk-version }} / ${{ matrix.flutter-type }} / ${{ matrix.os }}"
+    name: "${{ matrix.sdk-version }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         sdk-version: [stable] #, dev]
-        flutter-type: [git, zip]
+        # flutter-type: [git, zip]
         
     steps:
 
@@ -28,7 +28,9 @@ jobs:
         uses: DanTup/gh-actions/setup-flutter@master
         with:
           channel: ${{ matrix.sdk-version }}
-          zip: ${{ matrix.flutter-type == 'zip' }}
+          # Zip not currently supported, since Flutter has .tar.xz and the GH toolkit doesn't support this
+          # (also, in testing it was lower than the Git version)
+          # zip: ${{ matrix.flutter-type == 'zip' }}
 
       - name: Print Dart version
         run: dart --version

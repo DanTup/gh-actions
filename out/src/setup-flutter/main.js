@@ -46,7 +46,7 @@ function run() {
 }
 function gitClone(flutterChannel, folder) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield exec.exec("git", ["clone", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: folder });
+        yield exec.exec("git", ["clone", "--depth", "1", "--single-branch", "--branch", flutterChannel, flutterRepo], { cwd: folder });
         return path.join(folder, "flutter");
     });
 }

@@ -18,7 +18,8 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const dartChannel = core.getInput("channel", { required: true });
-            const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/release/latest/sdk/dartsdk-${exports.dartOS}-x64-release.zip`;
+            const releaseType = dartChannel === "be" ? "raw" : "release";
+            const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/${releaseType}/latest/sdk/dartsdk-${exports.dartOS}-x64-release.zip`;
             const dartZipPath = yield tc.downloadTool(url);
             // TODO: Cache?
             // https://github.com/actions/toolkit/tree/master/packages/tool-cache

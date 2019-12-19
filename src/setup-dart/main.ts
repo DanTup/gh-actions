@@ -10,7 +10,8 @@ export const dartOS = isWin ? "windows" : (isMac ? "macos" : "linux");
 async function run() {
 	try {
 		const dartChannel = core.getInput("channel", { required: true });
-		const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/release/latest/sdk/dartsdk-${dartOS}-x64-release.zip`;
+		const releaseType = dartChannel === "be" ? "raw" : "release";
+		const url = `https://storage.googleapis.com/dart-archive/channels/${dartChannel}/${releaseType}/latest/sdk/dartsdk-${dartOS}-x64-release.zip`;
 
 		const dartZipPath = await tc.downloadTool(url);
 

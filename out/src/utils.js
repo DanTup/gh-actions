@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetch = void 0;
 const https = require("https");
 const url = require("url");
 function fetch(urlString) {
@@ -23,10 +24,11 @@ function fetchHttps(hostname, port, path) {
         };
         const req = https.request(options, (resp) => {
             if (!resp || !resp.statusCode || resp.statusCode < 200 || resp.statusCode > 300) {
-                reject({ message: `Failed to get ${path}: ${resp && resp.statusCode}: ${resp && resp.statusMessage}` });
+                reject({ message: `Failed to get ${path || "/"}: ${resp && resp.statusCode}: ${resp && resp.statusMessage}` });
             }
             else {
                 const chunks = [];
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 resp.on("data", (b) => chunks.push(b.toString()));
                 resp.on("end", () => {
                     const data = chunks.join("");

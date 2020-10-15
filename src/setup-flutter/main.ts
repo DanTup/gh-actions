@@ -35,7 +35,8 @@ async function run() {
 		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["config", "--no-analytics"]);
 		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor", "-v"]);
 	} catch (error) {
-		core.setFailed(error.message);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		core.setFailed(error?.message || error);
 	}
 }
 
@@ -53,7 +54,7 @@ async function downloadZip(flutterChannel: string, folder: string) {
 	const url = `https://storage.googleapis.com/flutter_infra/releases/releases_${dartOS}.json`;
 	let releases: FlutterReleaseJson;
 	try {
-		releases = JSON.parse(await fetch(url));
+		releases = JSON.parse(await fetch(url)) as FlutterReleaseJson;
 	} catch (e) {
 		throw new Error(`Failed to download Flutter releases from ${url}: ${e}`);
 	}
@@ -79,4 +80,4 @@ interface FlutterReleaseJson {
 	}>;
 }
 
-run();
+void run();

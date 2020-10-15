@@ -22,8 +22,9 @@ async function run() {
 		core.addPath(path.join(dartSdkPath, "dart-sdk", "bin"));
 		core.setOutput("dart-sdk", dartSdkPath);
 	} catch (error) {
-		core.setFailed(error.message);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		core.setFailed(error?.message || error);
 	}
 }
 
-run();
+void run();

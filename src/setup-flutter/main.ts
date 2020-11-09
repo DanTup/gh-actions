@@ -29,7 +29,7 @@ async function run() {
 			: await gitClone(flutterChannel, tempFolder);
 
 		core.addPath(path.join(flutterSdkPath, "bin"));
-		core.addPath(path.join(flutterSdkPath, "cache", "dart-sdk", "bin"));
+		core.addPath(path.join(flutterSdkPath, "bin", "cache", "dart-sdk", "bin"));
 		core.setOutput("flutter-sdk", flutterSdkPath);
 
 		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["config", "--no-analytics"]);

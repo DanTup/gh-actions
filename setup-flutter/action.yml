@@ -9,5 +9,5 @@ outputs:
   flutter-sdk:
     description: "Path to the Flutter SDK folder."
 runs:
-  using: 'node12'
+  using: 'node16'
   main: '../out/src/setup-flutter/main.js'

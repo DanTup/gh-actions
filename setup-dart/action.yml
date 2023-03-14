@@ -9,5 +9,5 @@ outputs:
   dart-sdk:
     description: "Path to the Dart SDK folder."
 runs:
-  using: 'node12'
+  using: 'node16'
   main: '../out/src/setup-dart/main.js'

@@ -29,9 +29,10 @@ function run() {
             core.addPath(path.join(dartSdkPath, "dart-sdk", "bin"));
             core.setOutput("dart-sdk", dartSdkPath);
         }
-        catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            core.setFailed((error === null || error === void 0 ? void 0 : error.message) || error);
+        catch (error) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            const errorMessage = "message" in error ? error.message : error;
+            core.setFailed(errorMessage !== null && errorMessage !== void 0 ? errorMessage : "<unknown error>");
         }
     });
 }

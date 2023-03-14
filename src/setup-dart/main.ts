@@ -21,9 +21,10 @@ async function run() {
 
 		core.addPath(path.join(dartSdkPath, "dart-sdk", "bin"));
 		core.setOutput("dart-sdk", dartSdkPath);
-	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-		core.setFailed(error?.message || error);
+	} catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+		const errorMessage = "message" in error ? error.message : error;
+		core.setFailed(errorMessage ?? "<unknown error>");
 	}
 }
 

@@ -41,9 +41,10 @@ function run() {
             yield exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["config", "--no-analytics"]);
             yield exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor", "-v"]);
         }
-        catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            core.setFailed((error === null || error === void 0 ? void 0 : error.message) || error);
+        catch (error) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            const errorMessage = "message" in error ? error.message : error;
+            core.setFailed(errorMessage !== null && errorMessage !== void 0 ? errorMessage : "<unknown error>");
         }
     });
 }
@@ -58,7 +59,7 @@ function downloadZip(flutterChannel, folder) {
         const url = `https://storage.googleapis.com/flutter_infra/releases/releases_${exports.dartOS}.json`;
         let releases;
         try {
-            releases = JSON.parse(yield utils_1.fetch(url));
+            releases = JSON.parse(yield (0, utils_1.fetch)(url));
         }
         catch (e) {
             throw new Error(`Failed to download Flutter releases from ${url}: ${e}`);

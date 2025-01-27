@@ -44,7 +44,7 @@ async function run() {
 async function gitClone(flutterChannel: string, folder: string) {
 	await exec.exec(
 		"git",
-		["clone", "--single-branch", "--branch", flutterChannel, flutterRepo],
+		["clone", "--branch", flutterChannel, flutterRepo],
 		{ cwd: folder },
 	);
 

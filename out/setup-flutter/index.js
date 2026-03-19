@@ -34421,7 +34421,7 @@ function fetchHttps(hostname, port, path) {
             port,
         };
         const req = external_https_.request(options, (resp) => {
-            if (!resp || !resp.statusCode || resp.statusCode < 200 || resp.statusCode > 300) {
+            if (!resp || !resp.statusCode || resp.statusCode < 200 || resp.statusCode >= 300) {
                 // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                 reject({ message: `Failed to get ${path || "/"}: ${resp && resp.statusCode}: ${resp && resp.statusMessage}` });
             }
@@ -34472,7 +34472,7 @@ async function run() {
     }
     catch (error) { // eslint-disable-line @typescript-eslint/no-explicit-any
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        const errorMessage = "message" in error ? error.message : error;
+        const errorMessage = (typeof error === "object" && error !== null && "message" in error) ? error.message : error;
         const errorMessageString = typeof errorMessage === "string"
             ? errorMessage
             : "<unknown error>";

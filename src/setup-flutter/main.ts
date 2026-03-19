@@ -36,7 +36,7 @@ async function run() {
 		await exec.exec(path.join(flutterSdkPath, "bin", isWin ? "flutter.bat" : "flutter"), ["doctor", "-v"]);
 	} catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-		const errorMessage = "message" in error ? error.message : error;
+		const errorMessage = (typeof error === "object" && error !== null && "message" in error) ? error.message : error;
 		const errorMessageString =
 			typeof errorMessage === "string"
 				? errorMessage

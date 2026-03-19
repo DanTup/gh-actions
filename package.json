@@ -2,6 +2,7 @@
 	"name": "gh-actions",
 	"description": "A collection of GitHub actions I needed.",
 	"version": "0.0.1",
+	"type": "module",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/DanTup/gh-actions.git"

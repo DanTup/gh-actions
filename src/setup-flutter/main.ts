@@ -4,7 +4,7 @@ import * as tc from "@actions/tool-cache";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { fetch } from "../utils";
+import { fetch } from "../utils.js";
 
 const flutterRepo = `https://github.com/flutter/flutter`;
 const isWin = /^win/.test(process.platform);

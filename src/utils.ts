@@ -23,10 +23,11 @@ function fetchHttps(hostname: string | null, port: string | null, path: string |
 
 		const req = https.request(options, (resp) => {
 			if (!resp || !resp.statusCode || resp.statusCode < 200 || resp.statusCode > 300) {
+				// eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
 				reject({ message: `Failed to get ${path || "/"}: ${resp && resp.statusCode}: ${resp && resp.statusMessage}` });
 			} else {
 				const chunks: string[] = [];
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
 				resp.on("data", (b) => chunks.push(b.toString()));
 				resp.on("end", () => {
 					const data = chunks.join("");

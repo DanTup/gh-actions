@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  verify:
 
     name: "${{ matrix.sdk-version }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
@@ -19,13 +19,13 @@ jobs:
 
       - uses: actions/checkout@v1
 
-      - name: Setup Dart ${{ matrix.dart-version }}
-        uses: DanTup/gh-actions/setup-dart@master
+      - name: Setup Dart ${{ matrix.sdk-version }}
+        uses: "./setup-dart"
         with:
           channel: ${{ matrix.sdk-version }}
 
       - name: Setup Flutter ${{ matrix.sdk-version }}
-        uses: DanTup/gh-actions/setup-flutter@master
+        uses: "./setup-flutter"
         with:
           channel: ${{ matrix.sdk-version }}
           # Zip not currently supported, since Flutter has .tar.xz and the GH toolkit doesn't support this

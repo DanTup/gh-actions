@@ -8,8 +8,7 @@
 		"url": "https://github.com/DanTup/gh-actions.git"
 	},
 	"scripts": {
-		"build": "tsc -p ./",
-		"watch": "tsc -p ./ --watch",
+		"build": "ncc build src/setup-dart/main.ts -o out/setup-dart && ncc build src/setup-flutter/main.ts -o out/setup-flutter",
 		"lint": "eslint"
 	},
 	"dependencies": {
@@ -24,8 +23,9 @@
 		"@typescript-eslint/eslint-plugin": "^8.35.1",
 		"@typescript-eslint/parser": "^8.35.1",
 		"@typescript-eslint/utils": "^8.35.1",
+		"@vercel/ncc": "^0.38.4",
 		"eslint": "^9.30.0",
-		"typescript-eslint": "^8.35.1",
-		"typescript": "^5.9.3"
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.35.1"
 	}
 }

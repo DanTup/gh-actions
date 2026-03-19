@@ -37,7 +37,11 @@ async function run() {
 	} catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 		const errorMessage = "message" in error ? error.message : error;
-		core.setFailed(errorMessage ?? "<unknown error>");
+		const errorMessageString =
+			typeof errorMessage === "string"
+				? errorMessage
+				: "<unknown error>";
+		core.setFailed(errorMessageString);
 	}
 }
 

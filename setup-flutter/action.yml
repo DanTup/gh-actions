@@ -10,4 +10,4 @@ outputs:
     description: "Path to the Flutter SDK folder."
 runs:
   using: 'node24'
-  main: '../out/src/setup-flutter/main.js'
+  main: '../out/setup-flutter/index.js'
